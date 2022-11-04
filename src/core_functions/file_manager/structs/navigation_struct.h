@@ -1,0 +1,4 @@
+#ifndef NAVIGATION_STRUCT_H
+#define NAVIGATION_STRUCT_H
+
+#endif
