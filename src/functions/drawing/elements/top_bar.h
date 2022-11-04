@@ -1,3 +1,6 @@
+#ifndef HEADER_FILE
+#define HEADER_FILE
+
 #include <micros.h>
 #include <stdio.h>
 
@@ -11,3 +14,5 @@ void mnu_draw_top_bar(){
     printf("Welcome to MicrOS Navigation Utility, for help press f1\n");
 
 }
+
+#endif

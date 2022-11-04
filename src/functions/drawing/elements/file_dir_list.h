@@ -1,7 +1,10 @@
-#include "misc/file_list.h"
+#ifndef HEADER_FILE
+#define HEADER_FILE
+
+#include "misc/file_list.h>
 
 // this one displays a list of elements from a given list from given index and a given amount of elements
-void mnu_draw_file_dir_list(mnu_file_list* list_pointer, unsigned short int first, unsigned short int last, unsigned short int cursor_position){
+void mnu_draw_file_dir_list(struct mnu_file_list* list_pointer, unsigned short int first, unsigned short int last, unsigned short int cursor_position){
 
     for (unsigned short int n = first; n <= last; n++){
 
@@ -39,3 +42,5 @@ void mnu_draw_file_dir_list(mnu_file_list* list_pointer, unsigned short int firs
         printf("%s\n", list_pointer->names[n]);
     }
 }
+
+#endif

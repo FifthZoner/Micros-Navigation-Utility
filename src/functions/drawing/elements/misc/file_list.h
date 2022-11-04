@@ -6,13 +6,14 @@
 #include <stdlib.h>
 #include <string.h>
 
+
 // path to dir
-char* path_main;
+
 // hopefully to fix things
-char* full_path;
+
 
 // please init length to 0 before everything
-typedef struct mnu_file_list{
+struct mnu_file_list{
 
     // length of the list for function and normal use, over 65k should be enough, right?
     unsigned short int length;
@@ -22,13 +23,13 @@ typedef struct mnu_file_list{
     // array of bools equal in size to the list, only filled when dir changes for faster drawing and as such better user experience
     bool* are_they_dirs;
 
-}mnu_file_list;
+};
 
 // functions to make this thing useful
 
 // you might want to call this function from a stage and not for all the files to avoid calculating this for more files than can be displayed to preserve performance
 // Prepares additonal data about the files, pass pointer to path from list, pointer to name from names and bool from are_they_dirs
-void mnu_file_list_prepare_index(mnu_file_list* list_pointer, unsigned short int index){
+void mnu_file_list_prepare_index(char* path_main, struct mnu_file_list* list_pointer, unsigned short int index){
 
     // this monstrosity should spew out the name of the dir or file
 
@@ -61,14 +62,14 @@ void mnu_file_list_prepare_index(mnu_file_list* list_pointer, unsigned short int
     list_pointer->names[index][name_size] = '\0';
   
     // allocates memory for full path to the file / directory
-    full_path = malloc(strlen(list_pointer->names[index]) + strlen(path_main) + 1);
+    char* full_path = malloc(strlen(list_pointer->names[index]) + strlen(path_main) + 1);
 
     full_path[0] = '\0';
-    printf("Other2: %s %s %s %i\n", path_main, full_path, list_pointer->names[index], micros_heap_verify_integrity());
+    //printf("Other2: %s %s %s %i\n", path_main, full_path, list_pointer->names[index], micros_heap_verify_integrity());
     strcat(full_path, path_main);
-    printf("Other3: %s %s %s %i\n", path_main, full_path, list_pointer->names[index], micros_heap_verify_integrity());
+    //printf("Other3: %s %s %s %i\n", path_main, full_path, list_pointer->names[index], micros_heap_verify_integrity());
     strcat(full_path, list_pointer->names[index]);
-    printf("Other4: %s %s %s %i\n", path_main, full_path, list_pointer->names[index], micros_heap_verify_integrity());
+    //printf("Other4: %s %s %s %i\n", path_main, full_path, list_pointer->names[index], micros_heap_verify_integrity());
 
     // checks if the path contains a dir, does not work correctly as of now
     list_pointer->are_they_dirs[index] = micros_filesystem_is_directory(full_path);
@@ -81,7 +82,7 @@ void mnu_file_list_prepare_index(mnu_file_list* list_pointer, unsigned short int
 
 // This function fills the list with data from a given path
 // Pass directories only
-void mnu_file_list_fill(mnu_file_list* list_pointer){
+void mnu_file_list_fill(char* path_main, struct mnu_file_list* list_pointer){
 
 
     // if there was any content inside it is freed in this unholy thing
@@ -108,14 +109,14 @@ void mnu_file_list_fill(mnu_file_list* list_pointer){
 
     // interpreting the list for additional info
     for (unsigned short int n = 0; n < list_pointer->length; n++) {
-        mnu_file_list_prepare_index(list_pointer, n);
+        mnu_file_list_prepare_index(path_main, list_pointer, n);
     }
     
 
 }
 
 // deallocates all the memory oser for the list
-void mnu_file_list_free(mnu_file_list* list_pointer){
+void mnu_file_list_free(struct mnu_file_list* list_pointer){
 
     if (list_pointer->length > 0){
 

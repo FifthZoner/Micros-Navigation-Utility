@@ -6,6 +6,8 @@
 
 // vga mode had 25 rows and 80 columns
 
+
+
 // main function of the program
 int main(int argc, char* argv[]){
 
@@ -17,14 +19,14 @@ int main(int argc, char* argv[]){
     // current path
 
     // current dir moved to malloc so that it can be freed
-    path_main = malloc(strlen(argv[1]) + 1);
+    char* path_main = malloc(strlen(argv[1]) + 1);
     for (unsigned short int n = 0; n < strlen(argv[1]); n++){
         path_main[n] = argv[1][n];
     }
     // last character
     path_main[strlen(argv[1])] = 0;
 
-    mnu_main_loop(argv);
+    mnu_main_loop(path_main);
 
     return 0;
 }
