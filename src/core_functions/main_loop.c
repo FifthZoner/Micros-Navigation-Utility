@@ -1,6 +1,8 @@
+// corresponding header
+#include "main_loop.h"
+
 #include <stdio.h>
 
-#include "main_loop.h"
 #include "file_manager/structs/navigation_struct.h"
 
 // the main function that runs all of the program

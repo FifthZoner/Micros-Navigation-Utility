@@ -1,7 +1,3 @@
-// welcome my dear code diver, this is the main file of the glorious thing called MicrOS Navigation Utility or MNU!
-// This is my attempt at making a file explorer for the incredible, best that exists os, that is called MicrOS
-// Written by Szymon Jabloński for SKNI "KOD"
-
 // normal headers
 #include <string.h>
 #include <micros.h>

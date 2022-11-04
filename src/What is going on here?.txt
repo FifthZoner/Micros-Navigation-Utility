@@ -1,0 +1,43 @@
+Welcome my dear code diver! This is the main file of the glorious thing called MicrOS Navigation Utility or MNU!
+This is my attempt at making a file explorer for the incredible, best that exists os, that is called MicrOS
+This is also a rewrite of the first, inferior version of this program, started on november 4'th 2022, enjoy(?) my best code up to date!
+Written by Szymon Jabloński for SKNI "KOD" for MicrOS
+
+1. Common variables
+2. Structures
+3. Chart
+4. Stages
+
+1. Common variables
+
+    char* path_main - used as a container for the current dir path, at first taken from argv[1]
+
+    unsigned short int n - my favourite iteration variable name and type, unsigned short int should be enough for anything in MicrOS, sometimes unsigned int instead
+
+2. Structures
+
+Their related function info can be seen in their respective "..._functions.h" files
+It's better to include the function files as they already have the struct defined and there's a constructor, which is usually needed anyways, in these files
+Function files contain all the needed free functions so just use them to do that after ending the program
+
+    mnu_filesystem_navigation_struct - always to be declared with mnu_filesystem_navigation_struct_constructor(), contains all basic data used for file exploring
+
+    mnu_filesystem_file_list_struct - always to be declared with mnu_filesystem_file_list_struct_constructor(), contains list of files, their names
+
+3. Chart
+Not all functions are here, only the most important ones to help understand the project
+
+                main() ------------------------------------------------------> mnu_run_main_loop
+(basic startup and path_main creation)                    (main loop, key reactions, redirection to proper subfunctions)
+
+
+
+
+
+
+
+
+4. Stages
+
+Stages are used to differ between different things that are happening and are used in a main switch in loop.c file to use respective functions
+They are named using the mnu_main_loop_stage enum from it's file with similar name
