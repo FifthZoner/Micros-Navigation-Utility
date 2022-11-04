@@ -11,7 +11,7 @@ typedef struct mnu_filesystem_navigation_struct{
     // position of the cursor relative to the start of file list
     unsigned short int cursor_position;
     // file list structure
-    mnu_filesystem_file_list_struct file_list = mnu_filesystem_file_list_struct_constructor();
+    mnu_filesystem_file_list_struct file_list;
     // index from which to display files
     unsigned short int lower_limit;
     // index to which to display files, should be around upper_limit = lower_limit + <0, 22>
