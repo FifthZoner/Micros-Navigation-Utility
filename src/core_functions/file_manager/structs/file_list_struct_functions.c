@@ -36,11 +36,8 @@ void mnu_filesystem_file_list_struct_free(mnu_filesystem_file_list_struct* point
 
 // prepares things based on one index from the list, pass path from list, name from names and bool from are_they_dirs
 // returns the name
-char* local_fill_index(char* path, char* name, bool* is_it_dir){
+char* local_fill_index(char* path, char* name, bool* is_it_dir, const char* path_main){
     
-    // checking if it's a dir and giving bool it's value
-    *is_it_dir = micros_filesystem_is_directory(path);
-
     // now the harder part: name getting
     // finding slash before name, same as in unadvancing
     // variable that will be used to find slash before, will contain it's index
@@ -68,14 +65,34 @@ char* local_fill_index(char* path, char* name, bool* is_it_dir){
     // freeing path
     free(path);
 
+    // dir checking
+    // needs to create a path from path_main and name
+    // it might be a micros fault or something but is_directory function done not work with paths gotten from system because of lack of <letter>:/ start
+    // space (m)allocation
+    char* path_full = (char*)malloc((strlen(path_main) + strlen(name) + 1));
+
+    // filling
+    strcpy(path_full, path_main);
+    strcat(path_full, name);
+
+    // check proper
+    *is_it_dir = micros_filesystem_is_directory(path_full);
+
+    // freeing
+    free(path_full);
+
     return name;
 }
 
 // fills the list with data from a given path, ALWAYS free it after this pls
-void mnu_filesystem_file_list_struct_fill(mnu_filesystem_file_list_struct* pointer, const char* path_main, uint32_t* lower_border, uint32_t* upper_border){
+void mnu_filesystem_file_list_struct_fill(mnu_filesystem_file_list_struct* pointer,
+ const char* path_main, uint32_t* lower_border, uint32_t* upper_border, uint32_t* cursor_position){
 
-    // freeing in case of 
+    // freeing in case of it being full
+    mnu_filesystem_file_list_struct_free(pointer);
 
+    // cursor zeroing
+    *cursor_position = 0;
 
     // temporary list of paths to be used in filling the struct
     char** list;
@@ -94,7 +111,7 @@ void mnu_filesystem_file_list_struct_fill(mnu_filesystem_file_list_struct* point
 
         // preparing names and bools for each entry
         for (uint32_t n = 0; n < pointer->length; n++){
-            pointer->names[n] = local_fill_index(list[n], pointer->names[n], &pointer->are_they_dirs[n]);
+            pointer->names[n] = local_fill_index(list[n], pointer->names[n], &pointer->are_they_dirs[n], path_main);
         }
 
         // freeing, indexes were freed earlier
@@ -104,8 +121,8 @@ void mnu_filesystem_file_list_struct_fill(mnu_filesystem_file_list_struct* point
         *lower_border = 0;
         *upper_border = pointer->length;
 
-        if (*upper_border > 22){
-            *upper_border = 22;
+        if (*upper_border > 23){
+            *upper_border = 23;
         }
     }
     else{
@@ -117,5 +134,4 @@ void mnu_filesystem_file_list_struct_fill(mnu_filesystem_file_list_struct* point
         free(pointer->are_they_dirs);
         pointer->length = 0;
     }
-
 }

@@ -9,51 +9,104 @@
 #include "file_manager/drawing/draw_file_manager.h"
 #include "file_manager/structs/navigation_struct_functions.h"
 #include "file_manager/functions/dir_movement.h"
+#include "file_manager/functions/dir_cursor_actions.h"
 #include "misc/stage_enum.h"
 
-// handles all the key input in the given iteration
-void local_handle_keys(char* path_main, mnu_filesystem_navigation_struct* navigation_info, uint8_t* current_stage, bool* itsAlive){
+// handles keys for help screen
+void local_handle_keys_help_screen(uint8_t* current_stage, bool* itsAlive){
+
+}
+
+// handles keys for file manager
+char* local_handle_keys_file_manager(char* path_main, mnu_filesystem_navigation_struct* navigation_info, uint8_t* current_stage, bool* itsAlive){
 
     do{
-            micros_keyboard_scan_ascii_pair key_pair;
+        micros_keyboard_scan_ascii_pair key_pair;
 
-            micros_keyboard_wait_for_key_press(&key_pair);
+        micros_keyboard_wait_for_key_press(&key_pair);
 
-            switch(key_pair.scancode){
+        switch(key_pair.scancode){
 
-                // ends the loop
-                case key_esc:
+            // ends the loop
+            case key_esc:
 
-                    *itsAlive = 0;
-                    break;
+                *itsAlive = 0;
+                break;
 
-                // up key
-                case key_keypad_8:
-                    //mnu_move_file_cursor_up();
-                    break;
 
-                // down
-                case key_keypad_2:
-                    //mnu_move_file_cursor_down();
-                    break;
+            // up key
+            case key_keypad_8:
 
-                // enter, enters a new dir or opens a file (?)
-                case key_enter:
+                mnu_filesystem_cursor_move_up(navigation_info);
+                break;
 
-                    break;
 
-                // going back a dir
-                case key_backspace:
+            // down
+            case key_keypad_2:
+            
+                mnu_filesystem_cursor_move_down(navigation_info);
+                break;
 
-                    break;
 
-                default:
-                    continue;
+            // enter, enters a new dir or opens a file (?)
+            case key_enter:
+
+                // check for dir
+                if (navigation_info->file_list.are_they_dirs[navigation_info->cursor_position] == true){
+
+                    path_main = mnu_filesystem_directory_advance(path_main, navigation_info->file_list.names[navigation_info->cursor_position]);
+                    
+                    mnu_filesystem_file_list_struct_fill(&navigation_info->file_list,
+                    path_main, &navigation_info->lower_limit, &navigation_info->upper_limit, &navigation_info->cursor_position);
+                }
+
+                break;
+
+
+            // going back a dir
+            case key_backspace:
+
+                path_main = mnu_filesystem_directory_unadvance(path_main);
+
+                mnu_filesystem_file_list_struct_fill(&navigation_info->file_list,
+                 path_main, &navigation_info->lower_limit, &navigation_info->upper_limit, &navigation_info->cursor_position);
+
+                break;
+
+
+            default:
+                continue;
                 
             }
         }
         while (0);
 
+    return path_main;
+}
+
+// handles all the key input in the given iteration
+char* local_handle_keys(char* path_main, mnu_filesystem_navigation_struct* navigation_info, uint8_t* current_stage, bool* itsAlive){
+
+    // main drawing switch
+        switch (*current_stage){
+            
+            case mnu_main_loop_stage_file_explorer_main:
+
+                path_main = local_handle_keys_file_manager(path_main, navigation_info, current_stage, itsAlive);
+                break;
+
+
+            case mnu_main_loop_stage_help_screen:
+
+                break;
+
+
+            default:
+
+                break;
+        }
+
+    return path_main;
 }
 
 // the main function that runs all of the program
@@ -63,7 +116,7 @@ void mnu_run_main_loop(char* path_main){
     mnu_filesystem_navigation_struct navigation_info = mnu_filesystem_navigation_struct_constructor();
 
     // first fill of the file list
-    mnu_filesystem_file_list_struct_fill(&navigation_info.file_list, path_main, &navigation_info.lower_limit, &navigation_info.upper_limit);
+    mnu_filesystem_file_list_struct_fill(&navigation_info.file_list, path_main, &navigation_info.lower_limit, &navigation_info.upper_limit, &navigation_info.cursor_position);
 
     // loop condition, will probably be useless and replaced with break but it's here
     bool itsAlive = true;
@@ -97,7 +150,7 @@ void mnu_run_main_loop(char* path_main){
         }
 
         // key input and generally all the glorious things related to doing anything
-        local_handle_keys(path_main, &navigation_info, &current_stage, &itsAlive);
+        path_main = local_handle_keys(path_main, &navigation_info, &current_stage, &itsAlive);
 
     }
 

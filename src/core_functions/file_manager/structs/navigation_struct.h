@@ -11,12 +11,13 @@
 typedef struct mnu_filesystem_navigation_struct{
 
     // position of the cursor relative to the start of file list
-    uint16_t cursor_position;
+    uint32_t cursor_position;
     // file list structure
     mnu_filesystem_file_list_struct file_list;
     // index from which to display files
     uint32_t lower_limit;
-    // index to which to display files, should be around upper_limit = lower_limit + <0, 22>
+    // index + 1 to which to display files, should be around upper_limit = lower_limit + <0, 23>
+    // not just an index to maybye limit comparitions and to allow for use of unsigned variables
     uint32_t upper_limit;
 
 }mnu_filesystem_navigation_struct;

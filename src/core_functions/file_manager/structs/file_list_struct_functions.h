@@ -13,7 +13,8 @@ mnu_filesystem_file_list_struct mnu_filesystem_file_list_struct_constructor();
 void mnu_filesystem_file_list_struct_free(mnu_filesystem_file_list_struct* pointer);
 
 // fills the list with data from a given path, ALWAYS free it after this pls
-void mnu_filesystem_file_list_struct_fill(mnu_filesystem_file_list_struct* pointer, const char* path_main, uint32_t* lower_border, uint32_t* upper_border);
+void mnu_filesystem_file_list_struct_fill(mnu_filesystem_file_list_struct* pointer,
+ const char* path_main, uint32_t* lower_border, uint32_t* upper_border, uint32_t* cursor_position);
 
 
 #endif

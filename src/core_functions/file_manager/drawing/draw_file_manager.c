@@ -34,7 +34,7 @@ void local_draw_file_list(const mnu_filesystem_navigation_struct* navigation_inf
     micros_console_set_background_color(micros_console_color_black);
 
     // for each index in given range
-    for (uint32_t n = navigation_info->lower_limit; n <= navigation_info->upper_limit; n++){
+    for (uint32_t n = navigation_info->lower_limit; n < navigation_info->upper_limit; n++){
 
         // <
         micros_console_set_foreground_color(micros_console_color_light_gray);
