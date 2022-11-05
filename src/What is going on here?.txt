@@ -12,7 +12,10 @@ Written by Szymon Jabloński for SKNI "KOD" for MicrOS
 
     char* path_main - used as a container for the current dir path, at first taken from argv[1]
 
-    unsigned short int n - my favourite iteration variable name and type, unsigned short int should be enough for anything in MicrOS, sometimes unsigned int instead
+    unsigned short int n, m, k - my favourite iteration variable names and type, unsigned short int should be enough for anything in MicrOS, 
+        sometimes unsigned int instead
+
+    mnu_filesystem_navigation_struct navigation_info - navigation struct (in structures) common name used in code, declared in loop main function
 
 2. Structures
 
@@ -26,7 +29,6 @@ Function files contain all the needed free functions so just use them to do that
 
 3. Chart
 Not all functions are here, only the most important ones to help understand the project
-
                 main() ------------------------------------------------------> mnu_run_main_loop
 (basic startup and path_main creation)                    (main loop, key reactions, redirection to proper subfunctions)
 

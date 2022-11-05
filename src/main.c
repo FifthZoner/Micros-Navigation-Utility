@@ -17,6 +17,7 @@ int main(int argc, const char* argv[]){
     path_main[0] = '\0';
     strcpy(path_main, argv[1]);
 
+    // starting the loop proper
     mnu_run_main_loop(path_main);
 
     return 0;
