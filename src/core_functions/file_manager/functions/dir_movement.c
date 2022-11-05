@@ -11,37 +11,28 @@
 // returns changed char*
 char* mnu_filesystem_directory_advance(char* path_main, const char* name){
 
+    // extends the space for path: size of path + size of dir name + space for slash + space for \0
+    path_main = realloc(path_main, (strlen(path_main) + strlen(name) + 1) * sizeof(char));
 
-    // realloc cannot be used here as well
+    // adding name to the end of path to achieve something like: <path>/<name>\0
+    strcat(path_main, name);
 
-    // fix code
+    // the end of string thingy
+    path_main[strlen(path_main)] = '\0';
 
-    // allocating
-    char* path_new =(char*)malloc((strlen(path_main) + strlen(name) + 1) * sizeof(char));
-
-    // filling
-    strcpy(path_new, path_main);
-    strcat(path_new, name);
-
-    // freeing main
-    free(path_main);
-
-
-    path_main = path_new;
-        
-    return path_new;
+    return path_main;
 }
 
 // changes the path to go back one directory or stays the same if in the lowest one
 // returns changed char* or non changed one if there was no way to change it
 char* mnu_filesystem_directory_unadvance(char* path_main){
+
     // checking if the dir isn't like A:/
     if (strlen(path_main) > 3){
-        
 
         // for some reason the bug with realloc seems to have happened again so let's do it
 
-        // variable that will be used to alloc
+        // variable that will be used to realloc
         uint16_t n = strlen(path_main) - 2;
 
         // searching for the index of the last slash
@@ -52,19 +43,7 @@ char* mnu_filesystem_directory_unadvance(char* path_main){
 
         // fix code
 
-        // allocating
-        char* path_new =(char*)malloc((n + 2) * sizeof(char));
-
-        // filling
-        strcpy(path_new, path_main);
-
-        // freeing main
-        free(path_main);
-
-
-        path_main = path_new;
-        
-        return path_main;
+        return realloc(path_main, (n + 2) * sizeof(char));
     }
 
     // returns the same variable if nothing happended

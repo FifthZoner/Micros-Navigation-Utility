@@ -15,6 +15,33 @@
 // handles keys for help screen
 void local_handle_keys_help_screen(uint8_t* current_stage, bool* itsAlive){
 
+    do{
+        micros_keyboard_scan_ascii_pair key_pair;
+
+        micros_keyboard_wait_for_key_press(&key_pair);
+
+        switch(key_pair.scancode){
+
+            // ends the loop
+            case key_esc:
+
+                *itsAlive = 0;
+                break;
+
+            // goes back
+            case key_f5:
+
+                
+                *current_stage = mnu_main_loop_stage_file_explorer_main;
+
+                break;
+
+            default:
+                continue;
+                
+         }
+    }
+    while (0);
 }
 
 // handles keys for file manager
@@ -74,6 +101,14 @@ char* local_handle_keys_file_manager(char* path_main, mnu_filesystem_navigation_
                 break;
 
 
+            // goes to help
+            case key_f5:
+
+                // this always exits back to mnu or completly so no need for clearing list now
+                *current_stage = mnu_main_loop_stage_help_screen;
+
+                break;
+
             default:
                 continue;
                 
@@ -98,6 +133,7 @@ char* local_handle_keys(char* path_main, mnu_filesystem_navigation_struct* navig
 
             case mnu_main_loop_stage_help_screen:
 
+                local_handle_keys_help_screen(current_stage, itsAlive);
                 break;
 
 
@@ -121,7 +157,7 @@ void mnu_run_main_loop(char* path_main){
     // loop condition, will probably be useless and replaced with break but it's here
     bool itsAlive = true;
 
-    // stage variable to chceck what is happening, always starts in file explorer, at least for now
+    // stage variable to chceck what is happening, always starts in file explorer, at least for now, 256 possibilities should be enough
     uint8_t current_stage = mnu_main_loop_stage_file_explorer_main;
 
     // main loop
@@ -141,6 +177,7 @@ void mnu_run_main_loop(char* path_main){
 
             case mnu_main_loop_stage_help_screen:
 
+                mnu_filesystem_draw_help_screen();
                 break;
 
 

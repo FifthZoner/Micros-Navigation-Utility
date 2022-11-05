@@ -13,7 +13,7 @@ void local_draw_top(const char* path_main){
     micros_console_set_foreground_color(micros_console_color_black);
     printf("Welcome to MicrOS Navigation Utility! For help press ");
     micros_console_set_foreground_color(micros_console_color_light_gray);
-    printf("f1");
+    printf("f5");
     micros_console_set_foreground_color(micros_console_color_black);
     printf("!\n");
 
