@@ -7,6 +7,7 @@ Written by Szymon Jabloński for SKNI "KOD" for MicrOS
 2. Structures
 3. Chart
 4. Stages
+5. Other
 
 1. Common variables
 
@@ -31,8 +32,13 @@ Function files contain all the needed free functions so just use them to do that
 Not all functions are here, only the most important ones to help understand the project
                 main() ------------------------------------------------------> mnu_run_main_loop
 (basic startup and path_main creation)                    (main loop, key reactions, redirection to proper subfunctions)
-
-
+                                                                                      |
+                                                                                    switch
+                                                                                      |
+                                               mnu_draw_help_screen <-----------------|
+                                                                                      |
+                                                                                     \/
+                                                                            mnu_draw_file_explorer
 
 
 
@@ -43,3 +49,10 @@ Not all functions are here, only the most important ones to help understand the 
 
 Stages are used to differ between different things that are happening and are used in a main switch in loop.c file to use respective functions
 They are named using the mnu_main_loop_stage enum from it's file with similar name
+
+5. Other
+
+The project will be separated into sections with different focuses. As of now there's only the filesystem one, concerned with file exploration,
+changing them, etc. In the future I also plan launching other programs, opening files,etc, in other sections.
+
+Functions used only within 1 .c file and not declared int he header have the local_ prefix.

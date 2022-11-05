@@ -15,9 +15,9 @@ typedef struct mnu_filesystem_navigation_struct{
     // file list structure
     mnu_filesystem_file_list_struct file_list;
     // index from which to display files
-    uint16_t lower_limit;
+    uint32_t lower_limit;
     // index to which to display files, should be around upper_limit = lower_limit + <0, 22>
-    uint16_t upper_limit;
+    uint32_t upper_limit;
 
 }mnu_filesystem_navigation_struct;
 
