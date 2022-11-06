@@ -17,7 +17,19 @@ void mnu_filesystem_draw_help_screen(){
     printf("f5");
     micros_console_set_foreground_color(micros_console_color_black);
     printf("                                     \n");
+    printf("To exit MNU press ");
+    micros_console_set_foreground_color(micros_console_color_light_gray);
+    printf("escape");
+    micros_console_set_foreground_color(micros_console_color_black);
+    printf("                                         \n");
     micros_console_set_background_color(micros_console_color_black);
     micros_console_set_foreground_color(micros_console_color_light_gray);
 
+    // other help info
+    printf("\n");
+    printf("To navigate inside a directory use arrows\n");
+    printf("To change directories use enter and backspace\n");
+    printf("\n");
+    printf("In the current state only dir exploration is supported, more to come!");
+    printf("Planned features will make it possible to do as much as in the main terminal\n");
 }
