@@ -12,7 +12,9 @@ enum mnu_keybind_enum{
     mnu_keybind_directory_down = key_keypad_2,
     mnu_keybind_help_screen = key_f5,
     mnu_keybind_directory_create = key_keypad_plus,
-    mnu_keybind_directory_delete = key_keypad_minus
+    mnu_keybind_directory_delete = key_keypad_minus,
+    mnu_keybind_file_create = key_keypad_star,
+    mnu_keybind_file_delete = key_keypad_minus
 };
 
 #endif
