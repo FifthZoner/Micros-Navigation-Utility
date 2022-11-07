@@ -10,6 +10,8 @@
 #include "file_manager/structs/navigation_struct_functions.h"
 #include "file_manager/functions/dir_movement.h"
 #include "file_manager/functions/dir_cursor_actions.h"
+#include "file_manager/functions/file_actions.h"
+#include "misc/keybind_enum.h"
 #include "misc/stage_enum.h"
 
 // handles keys for help screen
@@ -23,13 +25,13 @@ void local_handle_keys_help_screen(uint8_t* current_stage, bool* itsAlive){
         switch(key_pair.scancode){
 
             // ends the loop
-            case key_esc:
+            case mnu_keybind_exit:
 
                 *itsAlive = 0;
                 break;
 
             // goes back
-            case key_f5:
+            case mnu_keybind_help_screen:
 
                 
                 *current_stage = mnu_main_loop_stage_file_explorer_main;
@@ -55,31 +57,31 @@ char* local_handle_keys_file_manager(char* path_main, mnu_filesystem_navigation_
         switch(key_pair.scancode){
 
             // ends the loop
-            case key_esc:
+            case mnu_keybind_exit:
 
                 *itsAlive = 0;
                 break;
 
 
             // up key
-            case key_keypad_8:
+            case mnu_keybind_directory_up:
 
                 mnu_filesystem_cursor_move_up(navigation_info);
                 break;
 
 
             // down
-            case key_keypad_2:
+            case mnu_keybind_directory_down:
             
                 mnu_filesystem_cursor_move_down(navigation_info);
                 break;
 
 
             // enter, enters a new dir or opens a file (?)
-            case key_enter:
+            case mnu_keybind_directory_advance:
 
                 // check for dir
-                if (navigation_info->file_list.are_they_dirs[navigation_info->cursor_position] == true){
+                if (navigation_info->file_list.are_they_dirs[navigation_info->cursor_position] == true && navigation_info->file_list.length > 0){
 
                     path_main = mnu_filesystem_directory_advance(path_main, navigation_info->file_list.names[navigation_info->cursor_position]);
                     
@@ -91,7 +93,7 @@ char* local_handle_keys_file_manager(char* path_main, mnu_filesystem_navigation_
 
 
             // going back a dir
-            case key_backspace:
+            case mnu_keybind_directory_unadvance:
 
                 path_main = mnu_filesystem_directory_unadvance(path_main);
 
@@ -102,10 +104,23 @@ char* local_handle_keys_file_manager(char* path_main, mnu_filesystem_navigation_
 
 
             // goes to help
-            case key_f5:
+            case mnu_keybind_help_screen:
 
                 // this always exits back to mnu or completly so no need for clearing list now
                 *current_stage = mnu_main_loop_stage_help_screen;
+
+                break;
+
+            
+            case mnu_keybind_directory_create:
+
+                // creates a dir
+                if (mnu_filesystem_directory_create(path_main) == 1){
+
+                    mnu_filesystem_file_list_struct_fill(&navigation_info->file_list,
+                    path_main, &navigation_info->lower_limit, &navigation_info->upper_limit, &navigation_info->cursor_position);
+                }
+
 
                 break;
 

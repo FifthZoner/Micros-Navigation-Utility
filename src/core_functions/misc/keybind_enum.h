@@ -9,7 +9,10 @@ enum mnu_keybind_enum{
     mnu_keybind_directory_advance = key_enter,
     mnu_keybind_directory_unadvance = key_backspace,
     mnu_keybind_directory_up = key_keypad_8,
-    mnu_keybind_directory_down = key_keypad_2
+    mnu_keybind_directory_down = key_keypad_2,
+    mnu_keybind_help_screen = key_f5,
+    mnu_keybind_directory_create = key_keypad_plus,
+    mnu_keybind_directory_delete = key_keypad_minus
 };
 
 #endif
