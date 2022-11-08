@@ -83,7 +83,7 @@ char* local_get_file_name(){
     micros_console_set_background_color(micros_console_color_black);
     micros_console_set_foreground_color(micros_console_color_light_gray);
 
-    printf("Please input new directory name (up to 12 characters):\n");
+    printf("Please input new directory name (up to 8 characters + dot + 3 for extension):\n");
 
     // maybye input will be colored?
     micros_console_set_foreground_color(micros_console_color_yellow);

@@ -124,6 +124,25 @@ char* local_handle_keys_file_manager(char* path_main, mnu_filesystem_navigation_
 
                 break;
 
+
+            case mnu_keybind_file_create:
+
+                // creates a file
+                if (mnu_filesystem_file_create(path_main) == 1){
+
+                    mnu_filesystem_file_list_struct_fill(&navigation_info->file_list,
+                    path_main, &navigation_info->lower_limit, &navigation_info->upper_limit, &navigation_info->cursor_position);
+                }
+
+                break;
+
+
+            case mnu_keybind_file_directory_delete:
+
+                // removes a dir or file after asking for confirmation
+
+                break;
+
             default:
                 continue;
                 
