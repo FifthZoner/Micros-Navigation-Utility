@@ -140,7 +140,7 @@ char* local_handle_keys_file_manager(char* path_main, mnu_filesystem_navigation_
             case mnu_keybind_file_directory_delete:
 
                 // removes a dir or file after asking for confirmation
-                if (navigation_info->file_list.are_they_dirs[navigation_info->cursor_position] == 1){
+                if (navigation_info->file_list.length > 0 && navigation_info->file_list.are_they_dirs[navigation_info->cursor_position] == 1){
                     // dir
 
                     if (mnu_filesystem_directory_delete(path_main, navigation_info->file_list.names[navigation_info->cursor_position]) == 1){
@@ -150,8 +150,14 @@ char* local_handle_keys_file_manager(char* path_main, mnu_filesystem_navigation_
                         path_main, &navigation_info->lower_limit, &navigation_info->upper_limit, &navigation_info->cursor_position);
                     }
                 }
-                else{
+                else if (navigation_info->file_list.length > 0){
                     // file
+                    if (mnu_filesystem_file_delete(path_main, navigation_info->file_list.names[navigation_info->cursor_position]) == 1){
+
+                        // refreshing
+                        mnu_filesystem_file_list_struct_fill(&navigation_info->file_list,
+                        path_main, &navigation_info->lower_limit, &navigation_info->upper_limit, &navigation_info->cursor_position);
+                    }
 
                 }
 
