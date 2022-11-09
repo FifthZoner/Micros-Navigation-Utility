@@ -1,8 +1,12 @@
 // corresponding header
 #include "file_actions.h"
 
+#include "misc/checking_functions.h"
+#include "../../misc/keybind_enum.h"
+
 #include <micros/micros_filesystem.h>
 #include <micros/micros_console.h>
+#include <micros/micros_keyboard.h>
 #include <string.h>
 #include <stdio.h>
 #include <stdint.h>
@@ -137,13 +141,86 @@ uint8_t mnu_filesystem_file_create(const char* path_main){
     return result;
 }
 
-// deletes a file after asking for a confirmation
-void mnu_filesystem_file_delete(const char* path_main, const char* name){
+// deletes dir
+uint8_t local_delete_dir(char* path_full){
+
+    uint8_t result = micros_filesystem_delete_directory(path_full);
+
+    free(path_full);
+
+    return result;
 
 }
 
 // deletes a directory after asking for a confirmation
 // if it's empty deletes instantly, if not then asks for confirmation to delete recursively
-void mnu_filesystem_directory_delete(const char* path_main, const char* name){
-    
+// returns 1 when succesful
+uint8_t mnu_filesystem_directory_delete(const char* path_main, const char* name){
+
+    // getting full path
+    char* path_full = (char*)malloc((strlen(path_main) + strlen(name) + 1));
+
+    // filling path
+    strcpy(path_full, path_main);
+    strcat(path_full, name);
+
+    // emptyness check
+    if (mnu_filesystem_directory_is_empty(path_full) == 1){
+
+        // without asking for confirmation
+
+        uint8_t result = micros_filesystem_delete_directory(path_full);
+
+        free(path_full);
+
+        return result;
+    }
+    else{
+
+        // with confirmation
+
+        micros_console_clear();
+        micros_console_set_background_color(micros_console_color_black);
+        micros_console_set_foreground_color(micros_console_color_light_gray);
+        printf("Are you sure that you want to delete this directory and it's contents?\n");
+        printf("Press confirm button to accept, any other to cancel:\n");
+
+        // waiting for enter
+        do{
+        micros_keyboard_scan_ascii_pair key_pair;
+
+        micros_keyboard_wait_for_key_press(&key_pair);
+
+        switch(key_pair.scancode){
+
+            // does the deletion
+            case mnu_keybind_confirm:
+
+                return local_delete_dir(path_full);
+
+                break;
+
+            default:
+                // cancels
+                break;
+                
+            }
+        }
+        while (0);
+    }
+
+
+    free(path_full);
+
+    return 0;
+
+}
+
+
+// deletes a file after getting a confirmation
+// returns 1 when successful
+uint8_t mnu_filesystem_file_delete(const char* path_main, const char* name){
+
+    return 0;
+
 }

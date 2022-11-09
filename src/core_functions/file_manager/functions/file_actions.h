@@ -15,11 +15,14 @@ uint8_t mnu_filesystem_directory_create(const char* path_main);
 // 0 if not
 uint8_t mnu_filesystem_file_create(const char* path_main);
 
-// deletes a file after asking for a confirmation
-void mnu_filesystem_file_delete(const char* path_main, const char* name);
-
 // deletes a directory after asking for a confirmation
 // if it's empty deletes instantly, if not then asks for confirmation to delete recursively
-void mnu_filesystem_directory_delete(const char* path_main, const char* name);
+// returns 1 when succesful
+uint8_t mnu_filesystem_directory_delete(const char* path_main, const char* name);
+
+
+// deletes a file after getting a confirmation
+// returns 1 when successful
+uint8_t mnu_filesystem_file_delete(const char* path_main, const char* name);
 
 #endif
