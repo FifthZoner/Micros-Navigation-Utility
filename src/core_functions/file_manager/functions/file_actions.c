@@ -3,6 +3,7 @@
 
 #include "misc/checking_functions.h"
 #include "../../misc/keybind_enum.h"
+#include "misc/recursive_delete.h"
 
 #include <micros/micros_filesystem.h>
 #include <micros/micros_console.h>
@@ -196,7 +197,7 @@ uint8_t mnu_filesystem_directory_delete(const char* path_main, const char* name)
             // does the deletion
             case mnu_keybind_confirm:
 
-                return local_delete_dir(path_full);
+                return mnu_filesystem_recursive_delete(path_full);
 
                 break;
 
