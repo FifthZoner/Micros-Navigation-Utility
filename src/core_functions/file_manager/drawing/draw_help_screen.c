@@ -31,10 +31,10 @@ void mnu_filesystem_draw_help_screen(){
     printf("To change directories use enter and backspace\n");
     printf("To add a new directory in current location use the keypad + button\n");
     printf("To add a new file in current location use the keypad * button\n");
+    printf("To delete a file or dir press keypad - button");
     printf("\n");
     printf("In the current state only exploration and creation works, more to come!\n");
     printf("Planned to be added soon:\n");
-    printf(" - file and dir deletion\n");
     printf(" - cursor position saving\n");
     printf(" - .elf file opening\n");
     printf(" - file and dir creation name duplicate check\n");
