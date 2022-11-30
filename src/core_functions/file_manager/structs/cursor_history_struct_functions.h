@@ -19,7 +19,8 @@ void mnu_cursor_history_struct_free(mnu_filesystem_cursor_history_struct* pointe
 void mnu_cursor_history_struct_get_pervious(mnu_filesystem_cursor_history_struct* pointer, 
 mnu_filesystem_navigation_struct* navigation_info, bool was_deleted);
 
-// adds a value to the array, always call when advancing in dir
-void mnu_cursor_history_struct_add_next(uint32_t index);
+// adds a value to the array and sets it to struct, always call when advancing in dir
+void mnu_cursor_history_struct_add_next(mnu_filesystem_cursor_history_struct* pointer, 
+mnu_filesystem_navigation_struct* navigation_info, uint32_t index);
 
 #endif

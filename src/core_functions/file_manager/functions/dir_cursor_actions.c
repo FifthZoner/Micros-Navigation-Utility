@@ -4,7 +4,7 @@
 #include <stdint.h>
 
 // calculates borders to have the cursor on in the middle
-void local_cursor_recalculate_borders(mnu_filesystem_navigation_struct* pointer){
+void mnu_filesystem_cursor_recalculate_borders(mnu_filesystem_navigation_struct* pointer){
 
     // checks if there is a reason to reacalculate
     if (pointer->file_list.length > 23){
@@ -64,7 +64,7 @@ void mnu_filesystem_cursor_move_up(mnu_filesystem_navigation_struct* pointer){
         }
 
         // border moving
-        local_cursor_recalculate_borders(pointer);
+        mnu_filesystem_cursor_recalculate_borders(pointer);
     }
 }
 
@@ -83,6 +83,6 @@ void mnu_filesystem_cursor_move_down(mnu_filesystem_navigation_struct* pointer){
         }
 
         // border moving
-        local_cursor_recalculate_borders(pointer);
+        mnu_filesystem_cursor_recalculate_borders(pointer);
     }
 }

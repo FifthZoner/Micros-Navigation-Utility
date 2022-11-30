@@ -3,6 +3,9 @@
 
 #include "../structs/navigation_struct.h"
 
+// recalculated the indexes to be shown
+void mnu_filesystem_cursor_recalculate_borders(mnu_filesystem_navigation_struct* pointer);
+
 // moves the cursor up with looping and border changes
 void mnu_filesystem_cursor_move_up(mnu_filesystem_navigation_struct* pointer);
 
