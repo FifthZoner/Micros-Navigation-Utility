@@ -8,6 +8,7 @@
 #include "file_manager/drawing/draw_help_screen.h"
 #include "file_manager/drawing/draw_file_manager.h"
 #include "file_manager/structs/navigation_struct_functions.h"
+#include "file_manager/structs/cursor_history_struct_functions.h"
 #include "file_manager/functions/dir_movement.h"
 #include "file_manager/functions/dir_cursor_actions.h"
 #include "file_manager/functions/file_actions.h"
@@ -205,6 +206,9 @@ void mnu_run_main_loop(char* path_main){
     // navigation struct that will be passed to all the lovely functions
     mnu_filesystem_navigation_struct navigation_info = mnu_filesystem_navigation_struct_constructor();
 
+    // creating of the cursor hustory struct
+    mnu_filesystem_cursor_history_struct cursor_history = mnu_filesystem_cursor_history_struct_constructor(path_main);
+
     // first fill of the file list
     mnu_filesystem_file_list_struct_fill(&navigation_info.file_list, path_main, &navigation_info.lower_limit, &navigation_info.upper_limit, &navigation_info.cursor_position);
 
@@ -245,11 +249,10 @@ void mnu_run_main_loop(char* path_main){
 
     }
 
-    // deallocating the path string
+    // deallocating
     free(path_main);
-
-    // freeing the navigation thing
     mnu_filesystem_navigation_struct_free(&navigation_info);
+    mnu_filesystem_cursor_history_struct_free(&cursor_history);
 
     // to not leave weird things
     micros_console_clear();

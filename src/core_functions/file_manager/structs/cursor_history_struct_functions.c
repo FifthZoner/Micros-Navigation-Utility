@@ -8,7 +8,7 @@
 #include <stdint.h>
 
 // constructor of the struct, always get initial value from this, path_main for checking of current depth
-mnu_filesystem_cursor_history_struct mnu_cursor_history_struct_constructor(const char* path_main){
+mnu_filesystem_cursor_history_struct mnu_filesystem_cursor_history_struct_constructor(const char* path_main){
 
     // to be passed
     mnu_filesystem_cursor_history_struct temp;
@@ -31,7 +31,7 @@ mnu_filesystem_cursor_history_struct mnu_cursor_history_struct_constructor(const
 }
 
 // frees the struct things that need freeing
-void mnu_cursor_history_struct_free(mnu_filesystem_cursor_history_struct* pointer){
+void mnu_filesystem_cursor_history_struct_free(mnu_filesystem_cursor_history_struct* pointer){
 
     if (pointer->array_length > 0){
         free(pointer);  
@@ -41,7 +41,7 @@ void mnu_cursor_history_struct_free(mnu_filesystem_cursor_history_struct* pointe
 // gets the data from a level below, also reallocs the array to delete the now useless old position
 // needs navigation info and was_deleted for checking if it does have a proper index, also checks for unforseen happenings
 // saves to navigation struct
-void mnu_cursor_history_struct_get_pervious(mnu_filesystem_cursor_history_struct* pointer, 
+void mnu_filesystem_cursor_history_struct_get_pervious(mnu_filesystem_cursor_history_struct* pointer, 
 mnu_filesystem_navigation_struct* navigation_info, bool was_deleted){
 
     // if the index is within the bounds
@@ -61,7 +61,7 @@ mnu_filesystem_navigation_struct* navigation_info, bool was_deleted){
 }
 
 // adds a value to the array and sets it to struct, always call when advancing in dir
-void mnu_cursor_history_struct_add_next(mnu_filesystem_cursor_history_struct* pointer, 
+void mnu_filesystem_cursor_history_struct_add_next(mnu_filesystem_cursor_history_struct* pointer, 
 mnu_filesystem_navigation_struct* navigation_info, uint32_t index){
 
     // expanding the array

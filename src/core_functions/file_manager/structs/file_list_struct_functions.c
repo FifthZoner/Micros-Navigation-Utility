@@ -1,5 +1,6 @@
 // corresponding header
 #include "file_list_struct_functions.h"
+#include "file_list_struct.h"
 
 // others
 #include <stdlib.h>
