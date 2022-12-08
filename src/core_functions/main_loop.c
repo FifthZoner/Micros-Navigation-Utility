@@ -48,7 +48,8 @@ void local_handle_keys_help_screen(uint8_t* current_stage, bool* itsAlive){
 }
 
 // handles keys for file manager
-char* local_handle_keys_file_manager(char* path_main, mnu_filesystem_navigation_struct* navigation_info, uint8_t* current_stage, bool* itsAlive){
+char* local_handle_keys_file_manager(char* path_main, mnu_filesystem_navigation_struct* navigation_info, 
+uint8_t* current_stage, bool* itsAlive, mnu_filesystem_cursor_history_struct* cursor_history){
 
     do{
         micros_keyboard_scan_ascii_pair key_pair;
@@ -87,7 +88,8 @@ char* local_handle_keys_file_manager(char* path_main, mnu_filesystem_navigation_
                     path_main = mnu_filesystem_directory_advance(path_main, navigation_info->file_list.names[navigation_info->cursor_position]);
                     
                     mnu_filesystem_file_list_struct_fill(&navigation_info->file_list,
-                    path_main, &navigation_info->lower_limit, &navigation_info->upper_limit, &navigation_info->cursor_position);
+                    path_main, &navigation_info->lower_limit, &navigation_info->upper_limit, &navigation_info->cursor_position,
+                    0, 0, cursor_history);
                 }
 
                 break;
@@ -99,7 +101,8 @@ char* local_handle_keys_file_manager(char* path_main, mnu_filesystem_navigation_
                 path_main = mnu_filesystem_directory_unadvance(path_main);
 
                 mnu_filesystem_file_list_struct_fill(&navigation_info->file_list,
-                 path_main, &navigation_info->lower_limit, &navigation_info->upper_limit, &navigation_info->cursor_position);
+                 path_main, &navigation_info->lower_limit, &navigation_info->upper_limit, &navigation_info->cursor_position,
+                1, 0, cursor_history);
 
                 break;
 
@@ -119,7 +122,8 @@ char* local_handle_keys_file_manager(char* path_main, mnu_filesystem_navigation_
                 if (mnu_filesystem_directory_create(path_main) == 1){
 
                     mnu_filesystem_file_list_struct_fill(&navigation_info->file_list,
-                    path_main, &navigation_info->lower_limit, &navigation_info->upper_limit, &navigation_info->cursor_position);
+                    path_main, &navigation_info->lower_limit, &navigation_info->upper_limit, &navigation_info->cursor_position, 
+                    0, 0, cursor_history);
                 }
 
 
@@ -132,7 +136,8 @@ char* local_handle_keys_file_manager(char* path_main, mnu_filesystem_navigation_
                 if (mnu_filesystem_file_create(path_main) == 1){
 
                     mnu_filesystem_file_list_struct_fill(&navigation_info->file_list,
-                    path_main, &navigation_info->lower_limit, &navigation_info->upper_limit, &navigation_info->cursor_position);
+                    path_main, &navigation_info->lower_limit, &navigation_info->upper_limit, &navigation_info->cursor_position,
+                    0, 0, cursor_history);
                 }
 
                 break;
@@ -148,7 +153,8 @@ char* local_handle_keys_file_manager(char* path_main, mnu_filesystem_navigation_
 
                         // refreshing
                         mnu_filesystem_file_list_struct_fill(&navigation_info->file_list,
-                        path_main, &navigation_info->lower_limit, &navigation_info->upper_limit, &navigation_info->cursor_position);
+                        path_main, &navigation_info->lower_limit, &navigation_info->upper_limit, &navigation_info->cursor_position,
+                        0, 1, cursor_history);
                     }
                 }
                 else if (navigation_info->file_list.length > 0){
@@ -157,7 +163,8 @@ char* local_handle_keys_file_manager(char* path_main, mnu_filesystem_navigation_
 
                         // refreshing
                         mnu_filesystem_file_list_struct_fill(&navigation_info->file_list,
-                        path_main, &navigation_info->lower_limit, &navigation_info->upper_limit, &navigation_info->cursor_position);
+                        path_main, &navigation_info->lower_limit, &navigation_info->upper_limit, &navigation_info->cursor_position,
+                        0, 1, cursor_history);
                     }
 
                 }
@@ -175,14 +182,15 @@ char* local_handle_keys_file_manager(char* path_main, mnu_filesystem_navigation_
 }
 
 // handles all the key input in the given iteration
-char* local_handle_keys(char* path_main, mnu_filesystem_navigation_struct* navigation_info, uint8_t* current_stage, bool* itsAlive){
+char* local_handle_keys(char* path_main, mnu_filesystem_navigation_struct* navigation_info, 
+uint8_t* current_stage, bool* itsAlive, mnu_filesystem_cursor_history_struct* cursor_history){
 
     // main drawing switch
         switch (*current_stage){
             
             case mnu_main_loop_stage_file_explorer_main:
 
-                path_main = local_handle_keys_file_manager(path_main, navigation_info, current_stage, itsAlive);
+                path_main = local_handle_keys_file_manager(path_main, navigation_info, current_stage, itsAlive, cursor_history);
                 break;
 
 
@@ -210,7 +218,7 @@ void mnu_run_main_loop(char* path_main){
     mnu_filesystem_cursor_history_struct cursor_history = mnu_filesystem_cursor_history_struct_constructor(path_main);
 
     // first fill of the file list
-    mnu_filesystem_file_list_struct_fill(&navigation_info.file_list, path_main, &navigation_info.lower_limit, &navigation_info.upper_limit, &navigation_info.cursor_position);
+    mnu_filesystem_file_list_struct_fill(&navigation_info.file_list, path_main, &navigation_info.lower_limit, &navigation_info.upper_limit, &navigation_info.cursor_position, 0, 0, &cursor_history);
 
     // loop condition, will probably be useless and replaced with break but it's here
     bool itsAlive = true;
@@ -245,7 +253,7 @@ void mnu_run_main_loop(char* path_main){
         }
 
         // key input and generally all the glorious things related to doing anything
-        path_main = local_handle_keys(path_main, &navigation_info, &current_stage, &itsAlive);
+        path_main = local_handle_keys(path_main, &navigation_info, &current_stage, &itsAlive, &cursor_history);
 
     }
 

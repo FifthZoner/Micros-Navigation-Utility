@@ -17,10 +17,10 @@ void mnu_filesystem_cursor_history_struct_free(mnu_filesystem_cursor_history_str
 // needs navigation info and was_deleted for checking if it does have a proper index, also checks for unforseen happenings
 // saves to navigation struct
 void mnu_filesystem_cursor_history_struct_get_pervious(mnu_filesystem_cursor_history_struct* pointer, 
-mnu_filesystem_navigation_struct* navigation_info, bool was_deleted);
+mnu_filesystem_file_list_struct* file_list, bool was_deleted, uint32_t* cursor_position, uint32_t* lower, uint32_t* upper);
 
 // adds a value to the array and sets it to struct, always call when advancing in dir
 void mnu_filesystem_cursor_history_struct_add_next(mnu_filesystem_cursor_history_struct* pointer, 
-mnu_filesystem_navigation_struct* navigation_info, uint32_t index);
+mnu_filesystem_file_list_struct* file_list, uint32_t index, uint32_t* cursor_position, uint32_t* lower, uint32_t* upper);
 
 #endif

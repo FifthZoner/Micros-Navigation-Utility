@@ -1,6 +1,7 @@
 // corresponding header
 #include "file_list_struct_functions.h"
 #include "file_list_struct.h"
+#include "cursor_history_struct_functions.h"
 
 // others
 #include <stdlib.h>
@@ -87,14 +88,23 @@ char* local_fill_index(char* path, char* name, bool* is_it_dir, const char* path
 
 // fills the list with data from a given path, ALWAYS free it after this pls
 void mnu_filesystem_file_list_struct_fill(mnu_filesystem_file_list_struct* pointer,
- const char* path_main, uint32_t* lower_border, uint32_t* upper_border, uint32_t* cursor_position){
+ const char* path_main, uint32_t* lower_border, uint32_t* upper_border, uint32_t* cursor_position, 
+ bool is_cursor_saved, bool was_deleted, mnu_filesystem_cursor_history_struct* cursor_history){
 
     // freeing in case of it being full
     mnu_filesystem_file_list_struct_free(pointer);
 
-    // cursor zeroing
-    *cursor_position = 0;
+     if (is_cursor_saved){
+        // proper saved cursor position
+        mnu_filesystem_cursor_history_struct_get_pervious(cursor_history, pointer, was_deleted, cursor_position, lower_border, upper_border);
+    }
+    else{
+        mnu_filesystem_cursor_history_struct_add_next(cursor_history, pointer, *cursor_position, cursor_position, lower_border, upper_border);
 
+         // cursor zeroing
+        *cursor_position = 0;
+    }
+    
     // temporary list of paths to be used in filling the struct
     char** list;
 

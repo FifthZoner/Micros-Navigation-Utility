@@ -3,6 +3,7 @@
 
 // the struct file
 #include "file_list_struct.h"
+#include "cursor_history_struct.h"
 
 #include <stdint.h>
 
@@ -14,7 +15,8 @@ void mnu_filesystem_file_list_struct_free(mnu_filesystem_file_list_struct* point
 
 // fills the list with data from a given path, ALWAYS free it after this pls
 void mnu_filesystem_file_list_struct_fill(mnu_filesystem_file_list_struct* pointer,
- const char* path_main, uint32_t* lower_border, uint32_t* upper_border, uint32_t* cursor_position);
+ const char* path_main, uint32_t* lower_border, uint32_t* upper_border, uint32_t* cursor_position, 
+ bool is_cursor_saved, bool was_deleted, mnu_filesystem_cursor_history_struct* cursor_history);
 
 
 #endif

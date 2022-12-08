@@ -4,10 +4,10 @@
 #include <stdint.h>
 
 // calculates borders to have the cursor on in the middle
-void mnu_filesystem_cursor_recalculate_borders(mnu_filesystem_navigation_struct* pointer){
+void mnu_filesystem_cursor_recalculate_borders(uint32_t* cursor_position, uint32_t* lowerr, uint32_t* upperr, uint32_t length){
 
     // checks if there is a reason to reacalculate
-    if (pointer->file_list.length > 23){
+    if (length > 23){
         
         // okay I have no idea how to do it efficiently so it'll look like that
 
@@ -15,8 +15,8 @@ void mnu_filesystem_cursor_recalculate_borders(mnu_filesystem_navigation_struct*
         int32_t lower; 
         uint32_t upper;
 
-        lower = pointer->cursor_position - 11;
-        upper = pointer->cursor_position + 12;
+        lower = *cursor_position - 11;
+        upper = *cursor_position + 12;
 
         // checking for edge cases
         if (lower < 0){
@@ -24,8 +24,8 @@ void mnu_filesystem_cursor_recalculate_borders(mnu_filesystem_navigation_struct*
             // adding negative part of lower to upper
             upper -= lower;
 
-            if (upper > pointer->file_list.length){
-                upper = pointer->file_list.length;
+            if (upper > length){
+                upper = length;
             }
 
             if (upper > 23){
@@ -33,7 +33,7 @@ void mnu_filesystem_cursor_recalculate_borders(mnu_filesystem_navigation_struct*
                 upper = 23;
             }
         }
-        else if (upper > pointer->file_list.length){
+        else if (upper > length){
 
             lower = upper - 23;
 
@@ -42,8 +42,8 @@ void mnu_filesystem_cursor_recalculate_borders(mnu_filesystem_navigation_struct*
             }
         }
         
-        pointer->lower_limit = lower;
-        pointer->upper_limit = upper;
+        *lowerr = lower;
+        *upperr = upper;
 
     }
 
@@ -64,7 +64,7 @@ void mnu_filesystem_cursor_move_up(mnu_filesystem_navigation_struct* pointer){
         }
 
         // border moving
-        mnu_filesystem_cursor_recalculate_borders(pointer);
+        mnu_filesystem_cursor_recalculate_borders(&pointer->cursor_position, &pointer->lower_limit, &pointer->upper_limit, pointer->file_list.length);
     }
 }
 
@@ -83,6 +83,6 @@ void mnu_filesystem_cursor_move_down(mnu_filesystem_navigation_struct* pointer){
         }
 
         // border moving
-        mnu_filesystem_cursor_recalculate_borders(pointer);
+        mnu_filesystem_cursor_recalculate_borders(&pointer->cursor_position, &pointer->lower_limit, &pointer->upper_limit, pointer->file_list.length);
     }
 }

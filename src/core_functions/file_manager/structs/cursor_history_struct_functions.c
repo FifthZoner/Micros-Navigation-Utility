@@ -42,14 +42,14 @@ void mnu_filesystem_cursor_history_struct_free(mnu_filesystem_cursor_history_str
 // needs navigation info and was_deleted for checking if it does have a proper index, also checks for unforseen happenings
 // saves to navigation struct
 void mnu_filesystem_cursor_history_struct_get_pervious(mnu_filesystem_cursor_history_struct* pointer, 
-mnu_filesystem_navigation_struct* navigation_info, bool was_deleted){
+mnu_filesystem_file_list_struct* file_list, bool was_deleted, uint32_t* cursor_position, uint32_t* lower, uint32_t* upper){
 
     // if the index is within the bounds
-    if (pointer->position_array[pointer->array_length - 1] < navigation_info->file_list.length){
-        navigation_info->cursor_position = pointer->position_array[pointer->array_length - 1];
+    if (pointer->position_array[pointer->array_length - 1] < file_list->length){
+        *cursor_position = pointer->position_array[pointer->array_length - 1];
     }
     else {
-        navigation_info->cursor_position = 0;
+        *cursor_position = 0;
     }
 
     // shortening the array
@@ -57,12 +57,12 @@ mnu_filesystem_navigation_struct* navigation_info, bool was_deleted){
     pointer->position_array = realloc(pointer->position_array, pointer->array_length);
 
     // racalculating view
-    mnu_filesystem_cursor_recalculate_borders(navigation_info);
+    mnu_filesystem_cursor_recalculate_borders(cursor_position, lower, upper, file_list->length);
 }
 
 // adds a value to the array and sets it to struct, always call when advancing in dir
 void mnu_filesystem_cursor_history_struct_add_next(mnu_filesystem_cursor_history_struct* pointer, 
-mnu_filesystem_navigation_struct* navigation_info, uint32_t index){
+mnu_filesystem_file_list_struct* file_list, uint32_t index, uint32_t* cursor_position, uint32_t* lower, uint32_t* upper){
 
     // expanding the array
     pointer->array_length++;
@@ -70,8 +70,8 @@ mnu_filesystem_navigation_struct* navigation_info, uint32_t index){
 
     // setting the value
     pointer->position_array[pointer->array_length - 1] = index;
-    navigation_info->cursor_position = index;
+    *cursor_position = index;
 
     // racalculating view
-    mnu_filesystem_cursor_recalculate_borders(navigation_info);
+    mnu_filesystem_cursor_recalculate_borders(cursor_position, lower, upper, file_list->length);
 }
