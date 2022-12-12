@@ -56,6 +56,11 @@ uint8_t mnu_filesystem_directory_create(const char* path_main){
 
     char* name = local_get_directory_name();
 
+    if (strlen(name) == 0){
+        free(name);
+        return 0;
+    }
+
     // creating path
     char* path_full = (char*)malloc((strlen(path_main) + strlen(name) + 1) * sizeof(char));
 
@@ -63,6 +68,7 @@ uint8_t mnu_filesystem_directory_create(const char* path_main){
     strcat(path_full, name);
 
     free(name);
+
 
     // information in case it takes long
     micros_console_set_foreground_color(micros_console_color_light_gray);
@@ -121,6 +127,11 @@ uint8_t mnu_filesystem_file_create(const char* path_main){
     // file name size limit seems to be 12
 
     char* name = local_get_file_name();
+
+    if (strlen(name) == 0){
+        free(name);
+        return 0;
+    }
 
     // creating path
     char* path_full = (char*)malloc((strlen(path_main) + strlen(name) + 1) * sizeof(char));
