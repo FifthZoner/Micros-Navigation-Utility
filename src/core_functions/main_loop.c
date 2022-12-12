@@ -89,7 +89,7 @@ uint8_t* current_stage, bool* itsAlive, mnu_filesystem_cursor_history_struct* cu
                     
                     mnu_filesystem_file_list_struct_fill(&navigation_info->file_list,
                     path_main, &navigation_info->lower_limit, &navigation_info->upper_limit, &navigation_info->cursor_position,
-                    0, 0, cursor_history);
+                    0, 0, cursor_history, 1);
                 }
 
                 break;
@@ -98,11 +98,15 @@ uint8_t* current_stage, bool* itsAlive, mnu_filesystem_cursor_history_struct* cu
             // going back a dir
             case mnu_keybind_directory_unadvance:
 
-                path_main = mnu_filesystem_directory_unadvance(path_main);
+                if (strlen(path_main) > 3){
 
-                mnu_filesystem_file_list_struct_fill(&navigation_info->file_list,
-                 path_main, &navigation_info->lower_limit, &navigation_info->upper_limit, &navigation_info->cursor_position,
-                1, 0, cursor_history);
+                    path_main = mnu_filesystem_directory_unadvance(path_main);
+
+                    mnu_filesystem_file_list_struct_fill(&navigation_info->file_list,
+                    path_main, &navigation_info->lower_limit, &navigation_info->upper_limit, &navigation_info->cursor_position,
+                    1, 0, cursor_history, 1);
+                
+                }
 
                 break;
 
@@ -123,7 +127,7 @@ uint8_t* current_stage, bool* itsAlive, mnu_filesystem_cursor_history_struct* cu
 
                     mnu_filesystem_file_list_struct_fill(&navigation_info->file_list,
                     path_main, &navigation_info->lower_limit, &navigation_info->upper_limit, &navigation_info->cursor_position, 
-                    0, 0, cursor_history);
+                    0, 0, cursor_history, 0);
                 }
 
 
@@ -137,7 +141,7 @@ uint8_t* current_stage, bool* itsAlive, mnu_filesystem_cursor_history_struct* cu
 
                     mnu_filesystem_file_list_struct_fill(&navigation_info->file_list,
                     path_main, &navigation_info->lower_limit, &navigation_info->upper_limit, &navigation_info->cursor_position,
-                    0, 0, cursor_history);
+                    0, 0, cursor_history, 0);
                 }
 
                 break;
@@ -154,7 +158,7 @@ uint8_t* current_stage, bool* itsAlive, mnu_filesystem_cursor_history_struct* cu
                         // refreshing
                         mnu_filesystem_file_list_struct_fill(&navigation_info->file_list,
                         path_main, &navigation_info->lower_limit, &navigation_info->upper_limit, &navigation_info->cursor_position,
-                        0, 1, cursor_history);
+                        0, 1, cursor_history, 0);
                     }
                 }
                 else if (navigation_info->file_list.length > 0){
@@ -164,7 +168,7 @@ uint8_t* current_stage, bool* itsAlive, mnu_filesystem_cursor_history_struct* cu
                         // refreshing
                         mnu_filesystem_file_list_struct_fill(&navigation_info->file_list,
                         path_main, &navigation_info->lower_limit, &navigation_info->upper_limit, &navigation_info->cursor_position,
-                        0, 1, cursor_history);
+                        0, 1, cursor_history, 0);
                     }
 
                 }
@@ -218,7 +222,8 @@ void mnu_run_main_loop(char* path_main){
     mnu_filesystem_cursor_history_struct cursor_history = mnu_filesystem_cursor_history_struct_constructor(path_main);
 
     // first fill of the file list
-    mnu_filesystem_file_list_struct_fill(&navigation_info.file_list, path_main, &navigation_info.lower_limit, &navigation_info.upper_limit, &navigation_info.cursor_position, 0, 0, &cursor_history);
+    mnu_filesystem_file_list_struct_fill(&navigation_info.file_list, path_main, &navigation_info.lower_limit, 
+    &navigation_info.upper_limit, &navigation_info.cursor_position, 0, 0, &cursor_history, 05);
 
     // loop condition, will probably be useless and replaced with break but it's here
     bool itsAlive = true;

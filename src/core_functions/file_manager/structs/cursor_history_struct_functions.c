@@ -6,6 +6,7 @@
 
 #include <string.h>
 #include <stdint.h>
+#include <stdio.h>
 
 // constructor of the struct, always get initial value from this, path_main for checking of current depth
 mnu_filesystem_cursor_history_struct mnu_filesystem_cursor_history_struct_constructor(const char* path_main){
@@ -14,7 +15,7 @@ mnu_filesystem_cursor_history_struct mnu_filesystem_cursor_history_struct_constr
     mnu_filesystem_cursor_history_struct temp;
 
     // initial value
-    temp.array_length = 1;
+    temp.array_length = 0;
 
     // looks for slashes, starts at the second one after 2'nd index of for example A:/..., as the first one is included
     for (uint16_t n = 3; n < strlen(path_main); n++){
@@ -24,8 +25,9 @@ mnu_filesystem_cursor_history_struct mnu_filesystem_cursor_history_struct_constr
     }
 
     // allocating memory
-    temp.position_array = (uint32_t*)calloc(0, temp.array_length * sizeof(uint32_t));
-
+    if (temp.array_length > 0){
+        temp.position_array = (uint32_t*)calloc(0, temp.array_length * sizeof(uint32_t));
+    }
 
     return temp;
 }
@@ -51,10 +53,10 @@ mnu_filesystem_file_list_struct* file_list, bool was_deleted, uint32_t* cursor_p
     else {
         *cursor_position = 0;
     }
-
+    
     // shortening the array
     pointer->array_length--;
-    pointer->position_array = realloc(pointer->position_array, pointer->array_length);
+    pointer->position_array = realloc(pointer->position_array, pointer->array_length * sizeof(uint32_t));
 
     // racalculating view
     mnu_filesystem_cursor_recalculate_borders(cursor_position, lower, upper, file_list->length);
@@ -66,7 +68,7 @@ mnu_filesystem_file_list_struct* file_list, uint32_t index, uint32_t* cursor_pos
 
     // expanding the array
     pointer->array_length++;
-    pointer->position_array = realloc(pointer->position_array, pointer->array_length);
+    pointer->position_array = realloc(pointer->position_array, pointer->array_length * sizeof(uint32_t));
 
     // setting the value
     pointer->position_array[pointer->array_length - 1] = index;

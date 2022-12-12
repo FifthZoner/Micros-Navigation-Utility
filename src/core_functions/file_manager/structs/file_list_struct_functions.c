@@ -5,6 +5,7 @@
 
 // others
 #include <stdlib.h>
+#include <stdio.h>
 #include <micros/micros_filesystem.h>
 
 // returns an empty mnu_filesystem_file_list_struct struct for use without sigservs or something
@@ -89,28 +90,16 @@ char* local_fill_index(char* path, char* name, bool* is_it_dir, const char* path
 // fills the list with data from a given path, ALWAYS free it after this pls
 void mnu_filesystem_file_list_struct_fill(mnu_filesystem_file_list_struct* pointer,
  const char* path_main, uint32_t* lower_border, uint32_t* upper_border, uint32_t* cursor_position, 
- bool is_cursor_saved, bool was_deleted, mnu_filesystem_cursor_history_struct* cursor_history){
+ bool is_cursor_saved, bool was_deleted, mnu_filesystem_cursor_history_struct* cursor_history, bool moved_dir){
 
     // freeing in case of it being full
     mnu_filesystem_file_list_struct_free(pointer);
 
-     if (is_cursor_saved){
-        // proper saved cursor position
-        mnu_filesystem_cursor_history_struct_get_pervious(cursor_history, pointer, was_deleted, cursor_position, lower_border, upper_border);
-    }
-    else{
-        mnu_filesystem_cursor_history_struct_add_next(cursor_history, pointer, *cursor_position, cursor_position, lower_border, upper_border);
-
-         // cursor zeroing
-        *cursor_position = 0;
-    }
-    
     // temporary list of paths to be used in filling the struct
     char** list;
-
+    
     // getting amount of files in dir
     pointer->length = micros_filesystem_get_entries_count_in_directory(path_main);
-
     // preparing space
     list = (char**)malloc(pointer->length * sizeof(char*));
     pointer->names = (char**)malloc(pointer->length * sizeof(char*));
@@ -144,5 +133,20 @@ void mnu_filesystem_file_list_struct_fill(mnu_filesystem_file_list_struct* point
         free(pointer->names);
         free(pointer->are_they_dirs);
         pointer->length = 0;
+    }
+
+    if (moved_dir){
+        if (is_cursor_saved){
+
+            // proper saved cursor position
+            mnu_filesystem_cursor_history_struct_get_pervious(cursor_history, pointer, was_deleted, cursor_position, lower_border, upper_border);
+        }
+        else{
+        
+            mnu_filesystem_cursor_history_struct_add_next(cursor_history, pointer, *cursor_position, cursor_position, lower_border, upper_border);
+
+            // cursor zeroing
+            *cursor_position = 0;
+        }
     }
 }

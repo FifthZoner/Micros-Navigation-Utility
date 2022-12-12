@@ -3,48 +3,37 @@
 
 #include <stdint.h>
 
+#include <stdio.h>
+
 // calculates borders to have the cursor on in the middle
 void mnu_filesystem_cursor_recalculate_borders(uint32_t* cursor_position, uint32_t* lowerr, uint32_t* upperr, uint32_t length){
 
-    // checks if there is a reason to reacalculate
+
+    // more than the screen
     if (length > 23){
-        
-        // okay I have no idea how to do it efficiently so it'll look like that
+        int32_t lower = *cursor_position - 11;
+        int32_t upper = *cursor_position + 12;
 
-        // need to be signed for calculation
-        int32_t lower; 
-        uint32_t upper;
-
-        lower = *cursor_position - 11;
-        upper = *cursor_position + 12;
-
-        // checking for edge cases
         if (lower < 0){
-
-            // adding negative part of lower to upper
             upper -= lower;
-
-            if (upper > length){
-                upper = length;
-            }
-
-            if (upper > 23){
-
-                upper = 23;
-            }
+            lower = 0;
         }
-        else if (upper > length){
 
-            lower = upper - 23;
-
-            if (lower < 0){
-                lower = 0;
-            }
+        if (upper > (int32_t)length){
+            upper = (int32_t)length;
         }
-        
-        *lowerr = lower;
+
+        lower = upper - 23;
+        if (lower < 0){
+            lower = 0;
+        }
+
         *upperr = upper;
-
+        *lowerr = lower;
+    }
+    else{
+        *upperr = length;
+        *lowerr = 0;
     }
 
 }
@@ -79,7 +68,7 @@ void mnu_filesystem_cursor_move_down(mnu_filesystem_navigation_struct* pointer){
             pointer->cursor_position++;
         }
         else {
-            pointer->cursor_position = pointer->lower_limit;
+            pointer->cursor_position = 0;
         }
 
         // border moving
