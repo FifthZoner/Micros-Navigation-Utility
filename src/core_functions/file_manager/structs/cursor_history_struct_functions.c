@@ -36,7 +36,7 @@ mnu_filesystem_cursor_history_struct mnu_filesystem_cursor_history_struct_constr
 void mnu_filesystem_cursor_history_struct_free(mnu_filesystem_cursor_history_struct* pointer){
 
     if (pointer->array_length > 0){
-        free(pointer);  
+        free(pointer->position_array);  
     }
 }
 
