@@ -1,94 +1,92 @@
 // corresponding header
 #include "recursive_delete.h"
 
-#include <micros/micros_filesystem.h>
+#include <micros.h>
 #include <stdint.h>
 #include <stdio.h>
 #include <stdlib.h>
+#include <string.h>
 
-// for debug
-//#include <micros.h>
+// pass path to dir entry is in and path gotten from micros
+uint8_t local_handle_entry(const char* path_before, const char* entry_path){
 
-// does things for a single dir/file
-void local_handle_entry(const char* path, char* path_gotten){
+    // generating path in format of X:/.../name/ or X:/.../name.extension from entry_path without drive letter and path_before without the name
+    // searching for name length
+    uint16_t length = 1;
+    uint16_t path_before_length = strlen(path_before);
+    uint16_t entry_length = strlen(entry_path);
+    for (;entry_path[entry_length - 1 - length] != '/'; length++){}
+    // X:/.../ + (name/ v name.extension) + '\0'
+    char* path = (char*)malloc((path_before_length + length + 1) * sizeof(char));
 
-    // creating a new path
+    strcpy(path, path_before);
+    for (uint16_t n = 0; n < length; n++){
+        path[path_before_length + n] = entry_path[entry_length - length + n];
+    }
+    path[path_before_length + length] = '\0';
 
-    // finding the last slash before the name
+    // proper deletion and possible further recursion
+    if (micros_filesystem_is_directory(path)){
 
-    // variable that will be used to fill
-        uint16_t n = strlen(path_gotten) - 2;
+        uint8_t result = mnu_filesystem_recursive_delete(path);
 
-    // searching for the index of the last slash
-    for (; path_gotten[n] != '/'; n--){}
+        free(path);
 
-    // allocating for new path
-    char* path_new = (char*)malloc((strlen(path) + strlen(path_gotten) - n));
+        return result;
 
-    // filling
-    strcpy(path_new, path);
-    // name copy here
-    uint16_t path_index = strlen(path);
-    for (uint16_t m = n + 1; m <  strlen(path) + strlen(path_gotten) - n; m++){
+    }
+    else if (micros_filesystem_is_file(path)){
 
-        path_new[path_index] = path_gotten[m]; 
-        path_index++;
+        // info
+        micros_console_set_foreground_color(micros_console_color_light_gray);
+        printf("Deleting at: ");
+        micros_console_set_foreground_color(micros_console_color_yellow);
+        printf("%s\n", path);
+        micros_process_current_process_sleep(100);
+
+        uint8_t result = micros_filesystem_delete_file(path);
+
+        free(path);
+
+        return result;
     }
 
-    printf("%s\n", path_new);
-
-    // for debug
-    //micros_process_current_process_sleep(100);
-    
-    // proper deletion
-    if (micros_filesystem_is_directory(path_new)){
-        // if there's more
-        mnu_filesystem_recursive_delete(path_new);
-    }
-    else{
-        micros_filesystem_delete_file(path_new);
-    }
-
-    // freeing memory
-    free(path_gotten);
-    free(path_new);
+    return 0;
 }
+
 
 // recursive deletion main function
 // deletes a dir and all it's subdirs and files
-// pass path to dir
-// hopefull does not cause memory leaks
 uint8_t mnu_filesystem_recursive_delete(const char* path){
 
-    // getting amount of things to delete
+    // checking if given dir is empty
     uint32_t entry_amount = micros_filesystem_get_entries_count_in_directory(path);
 
-    // checking if empty
-    if (entry_amount == 0){
-
-        micros_filesystem_delete_directory(path);
-
-        return 1;
-    }
-
-    // allocating
-    char** entries = (char**)malloc(entry_amount * sizeof(char*));
-
-    // doing things
-    micros_filesystem_get_entries_in_directory(path, entries);
-
-    // does things for each entry
-    for (uint32_t n = 0; n < entry_amount; n++){
-
-        local_handle_entry(path, entries[n]);
-
-    }
-
-    
     if (entry_amount > 0){
-        free(entries);
+
+        // handling all the entries
+        char** list = (char**)malloc(entry_amount * sizeof(char*));
+        micros_filesystem_get_entries_in_directory(path, list);
+
+        // racursion or not for each entry
+        for (uint32_t n = 0; n < entry_amount; n++){
+
+            local_handle_entry(path, list[n]);
+
+
+            free(list[n]);
+        }
+
+
+        free(list);
     }
 
-    // deleteing the folder
+    // info
+    micros_console_set_foreground_color(micros_console_color_light_gray);
+    printf("Deleting at: ");
+    micros_console_set_foreground_color(micros_console_color_cyan);
+    printf("%s\n", path);
+
+    // for now no deletion
     return micros_filesystem_delete_directory(path);
 }
