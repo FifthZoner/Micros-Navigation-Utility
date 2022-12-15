@@ -12,6 +12,7 @@
 #include "file_manager/functions/dir_movement.h"
 #include "file_manager/functions/dir_cursor_actions.h"
 #include "file_manager/functions/file_actions.h"
+#include "file_manager/functions/file_handling.h"
 #include "misc/keybind_enum.h"
 #include "misc/stage_enum.h"
 
@@ -83,13 +84,27 @@ uint8_t* current_stage, bool* itsAlive, mnu_filesystem_cursor_history_struct* cu
             case mnu_keybind_directory_advance:
 
                 // check for dir
-                if (navigation_info->file_list.are_they_dirs[navigation_info->cursor_position] == true && navigation_info->file_list.length > 0){
+                if (navigation_info->file_list.length > 0 && navigation_info->file_list.are_they_dirs[navigation_info->cursor_position] == true){
 
                     path_main = mnu_filesystem_directory_advance(path_main, navigation_info->file_list.names[navigation_info->cursor_position]);
                     
                     mnu_filesystem_file_list_struct_fill(&navigation_info->file_list,
                     path_main, &navigation_info->lower_limit, &navigation_info->upper_limit, &navigation_info->cursor_position,
                     0, 0, cursor_history, 1);
+                }
+                else if (navigation_info->file_list.length > 0 && navigation_info->file_list.are_they_dirs[navigation_info->cursor_position] == false){
+
+
+                    char* file_path = (char*)malloc((strlen(path_main) + strlen(navigation_info->file_list.names[navigation_info->cursor_position]) + 1) * sizeof(char));
+
+                    strcpy(file_path, path_main);
+                    strcat(file_path, navigation_info->file_list.names[navigation_info->cursor_position]);
+
+
+                    mnu_filesystem_handle_file(file_path, path_main);
+
+                    free(file_path);
+
                 }
 
                 break;

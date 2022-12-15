@@ -13,7 +13,7 @@ int main(int argc, const char* argv[]){
     micros_console_set_cursor_visibility(false);
 
     // current path to argv to avoid changing it
-    char* path_main = malloc(strlen(argv[1]) + 1);
+    char* path_main = (char*)malloc(strlen(argv[1]) + 1);
     path_main[0] = '\0';
     strcpy(path_main, argv[1]);
 
