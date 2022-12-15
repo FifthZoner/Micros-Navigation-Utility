@@ -6,7 +6,7 @@
 // others
 #include <stdlib.h>
 #include <stdio.h>
-#include <micros/micros_filesystem.h>
+#include <micros.h>
 
 // returns an empty mnu_filesystem_file_list_struct struct for use without sigservs or something
 mnu_filesystem_file_list_struct mnu_filesystem_file_list_struct_constructor(){
@@ -31,6 +31,8 @@ void mnu_filesystem_file_list_struct_free(mnu_filesystem_file_list_struct* point
     // this can't be done in a loop
     if (pointer->length > 0){
         free(pointer->are_they_dirs);
+        free(pointer->file_sizes);
+        free(pointer->names);
     }
 
     // just to be safe
@@ -39,7 +41,7 @@ void mnu_filesystem_file_list_struct_free(mnu_filesystem_file_list_struct* point
 
 // prepares things based on one index from the list, pass path from list, name from names and bool from are_they_dirs
 // returns the name
-char* local_fill_index(char* path, char* name, bool* is_it_dir, const char* path_main){
+char* local_fill_index(char* path, char* name, bool* is_it_dir, const char* path_main, uint32_t* size_pointer){
     
     // now the harder part: name getting
     // finding slash before name, same as in unadvancing
@@ -79,7 +81,18 @@ char* local_fill_index(char* path, char* name, bool* is_it_dir, const char* path
     strcat(path_full, name);
 
     // check proper
+    
+
     *is_it_dir = micros_filesystem_is_directory(path_full);
+    if (*is_it_dir == 0){
+        micros_filesystem_file_info file_info;
+        micros_filesystem_get_file_info(path_full, &file_info);
+        *size_pointer = file_info.size;
+    }
+    else{
+        *size_pointer = micros_filesystem_get_entries_count_in_directory(path_full);
+    }
+   
 
     // freeing
     free(path_full);
@@ -100,10 +113,12 @@ void mnu_filesystem_file_list_struct_fill(mnu_filesystem_file_list_struct* point
     
     // getting amount of files in dir
     pointer->length = micros_filesystem_get_entries_count_in_directory(path_main);
+
     // preparing space
     list = (char**)malloc(pointer->length * sizeof(char*));
     pointer->names = (char**)malloc(pointer->length * sizeof(char*));
     pointer->are_they_dirs = (bool*)malloc(pointer->length * sizeof(bool));
+    pointer->file_sizes = (uint32_t*)malloc(pointer->length * sizeof(uint32_t));
 
     // getting file paths
     if (micros_filesystem_get_entries_in_directory(path_main, list)){
@@ -111,7 +126,7 @@ void mnu_filesystem_file_list_struct_fill(mnu_filesystem_file_list_struct* point
 
         // preparing names and bools for each entry
         for (uint32_t n = 0; n < pointer->length; n++){
-            pointer->names[n] = local_fill_index(list[n], pointer->names[n], &pointer->are_they_dirs[n], path_main);
+            pointer->names[n] = local_fill_index(list[n], pointer->names[n], &pointer->are_they_dirs[n], path_main, &pointer->file_sizes[n]);
         }
 
         // freeing, indexes were freed earlier
@@ -132,6 +147,7 @@ void mnu_filesystem_file_list_struct_fill(mnu_filesystem_file_list_struct* point
         free(list);
         free(pointer->names);
         free(pointer->are_they_dirs);
+        free(pointer->file_sizes);
         pointer->length = 0;
     }
 

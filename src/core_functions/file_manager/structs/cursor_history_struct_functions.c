@@ -68,12 +68,17 @@ mnu_filesystem_file_list_struct* file_list, uint32_t index, uint32_t* cursor_pos
 
     // expanding the array
     pointer->array_length++;
-    pointer->position_array = realloc(pointer->position_array, pointer->array_length * sizeof(uint32_t));
+
+    if (pointer->array_length > 1){
+        pointer->position_array = (uint32_t*)realloc(pointer->position_array, pointer->array_length * sizeof(uint32_t));
+    }
+    else {
+        pointer->position_array = (uint32_t*)malloc(pointer->array_length * sizeof(uint32_t));
+    }
 
     // setting the value
     pointer->position_array[pointer->array_length - 1] = index;
     *cursor_position = index;
-
     // racalculating view
     mnu_filesystem_cursor_recalculate_borders(cursor_position, lower, upper, file_list->length);
 }

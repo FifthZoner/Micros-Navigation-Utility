@@ -15,6 +15,8 @@ typedef struct mnu_filesystem_file_list_struct{
     char** names;
     // to see if something is a dir or a file, using a char and not a bool because I don't care enough to search for a way to use it on micros
     bool* are_they_dirs;
+    // file sizes
+    uint32_t* file_sizes;
 
 }mnu_filesystem_file_list_struct;
 

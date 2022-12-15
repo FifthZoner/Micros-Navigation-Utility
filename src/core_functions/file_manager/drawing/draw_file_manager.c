@@ -3,6 +3,7 @@
 
 #include <micros/micros_console.h>
 #include <stdio.h>
+#include <string.h>
 
 #include "../structs/navigation_struct.h"
 
@@ -69,7 +70,35 @@ void local_draw_file_list(const mnu_filesystem_navigation_struct* navigation_inf
         }
 
         // file/dir names
-        printf("%s\n", navigation_info->file_list.names[n]);
+        printf("%s", navigation_info->file_list.names[n]);
+    
+        micros_console_position temp;
+        temp.x = 24;
+        temp.y = 2 + n;
+
+        micros_console_set_cursor_position(&temp);
+
+        if (navigation_info->cursor_position == n){
+            micros_console_set_foreground_color(micros_console_color_green);
+            printf("-> ");
+        }
+
+        if (navigation_info->file_list.are_they_dirs[n] == 0){
+
+            micros_console_set_foreground_color(micros_console_color_magenta);
+            printf("%i Bytes", navigation_info->file_list.file_sizes[n]);
+
+        }
+        else{
+
+            // file amount
+            micros_console_set_foreground_color(micros_console_color_light_red);
+            printf("%i Elements", navigation_info->file_list.file_sizes[n]);
+        }
+
+
+        printf("\n");
+        
     }
 }
 
