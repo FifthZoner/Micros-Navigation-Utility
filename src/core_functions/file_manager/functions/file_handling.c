@@ -1,6 +1,6 @@
 // corresponding header
 #include "file_handling.h"
-#include "misc/execute_file.h"
+#include "misc/execute_elf_file.h"
 
 #include <micros.h>
 #include <stdio.h>
@@ -8,7 +8,7 @@
 
 
 // takes a file name and checks extension to do what is needed and does it 
-void mnu_filesystem_handle_file(const char* file_path, char* path_main){
+void mnu_filesystem_handle_file(char* file_path, char* path_main){
 
     // getting extension name
     // should be the first letter of extension
@@ -22,10 +22,9 @@ void mnu_filesystem_handle_file(const char* file_path, char* path_main){
         extension[n] = file_path[n + offset];
     }
 
-    // there's only elf for now
-    if (extension[0] == 'E' && extension[1] == 'L' && extension[2] == 'F' && extension[3] == '\0'){
-        // executing file
-        
-        mnu_filesystem_execute_app(file_path, path_main[0], path_main);
+    // for now only .elf because there's no text editor
+    if (strcmp(extension, "ELF") == 0){
+
+        mnu_filesystem_execute_app(file_path, path_main);
     }
 }
