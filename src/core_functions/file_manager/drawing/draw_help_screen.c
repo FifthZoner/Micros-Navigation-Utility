@@ -29,14 +29,15 @@ void mnu_filesystem_draw_help_screen(){
     printf("\n");
     printf("To navigate inside a directory use arrows\n");
     printf("To change directories use enter and backspace\n");
+    printf("To open a file use enter\n");
     printf("To add a new directory in current location use the keypad + button\n");
     printf("To add a new file in current location use the keypad * button\n");
     printf("To delete a file or dir press keypad - button");
     printf("\n");
     printf("In the current state only exploration and creation works, more to come!\n");
     printf("Planned to be added soon:\n");
-    printf(" - cursor position saving\n");
-    printf(" - .elf file opening\n");
     printf(" - file and dir creation name duplicate check\n");
+    printf(" - file and dir renaming\n");
+    printf(" - file and dir copying/moving\n");
     printf("Planned features will make it possible to do as much as in the main terminal\n");
 }

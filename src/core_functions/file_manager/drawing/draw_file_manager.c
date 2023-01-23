@@ -7,9 +7,10 @@
 
 #include "../structs/navigation_struct.h"
 
-void local_draw_top(const char* path_main){
 
-    // top info with colored f1 as it's the only useful thing there
+// top help and welcome bar
+void mnu_filesystem_draw_welcome_bar( void ){
+    // top info with colored f5 as it's the only useful thing there
     micros_console_set_background_color(micros_console_color_dark_gray);
     micros_console_set_foreground_color(micros_console_color_black);
     printf("Welcome to MicrOS Navigation Utility! For help press ");
@@ -17,6 +18,42 @@ void local_draw_top(const char* path_main){
     printf("f5");
     micros_console_set_foreground_color(micros_console_color_black);
     printf("!\n");
+}
+
+// progress for some processes
+void mnu_filesystem_draw_progress_bar(const char* message, uint8_t percents){
+
+    // drawing the bar
+    micros_console_set_background_color(micros_console_color_black);
+    micros_console_set_foreground_color(micros_console_color_light_gray);
+    printf("[");
+    micros_console_set_foreground_color(micros_console_color_light_green);
+    for (uint8_t n = 0; n < (int)(percents / 2); n++){
+        printf("=");
+    }
+    micros_console_position pos;
+    pos.x = 51;
+    pos.y = 0;
+    micros_console_set_cursor_position(&pos);
+    micros_console_set_foreground_color(micros_console_color_light_gray);
+    printf("] ");
+    micros_console_set_foreground_color(micros_console_color_light_green);
+    printf("%i%c", percents, '%');
+    pos.x = 58;
+    micros_console_set_cursor_position(&pos);
+    micros_console_set_foreground_color(micros_console_color_light_gray);
+    printf("%s\n", message);
+}
+
+// information about what happened recently
+void mnu_filesystem_draw_information_bar(const char* message){
+    micros_console_set_background_color(micros_console_color_dark_gray);
+    micros_console_set_foreground_color(micros_console_color_black);
+    printf("%s\n", message);
+}
+
+
+void local_draw_top(const char* path_main){
 
     // dir current dir text
     micros_console_set_background_color(micros_console_color_black);

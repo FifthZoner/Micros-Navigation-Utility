@@ -257,6 +257,7 @@ void mnu_run_main_loop(char* path_main){
             
             case mnu_main_loop_stage_file_explorer_main:
 
+                mnu_filesystem_draw_welcome_bar();
                 mnu_filesystem_draw_file_manager(path_main, &navigation_info);
                 break;
 
